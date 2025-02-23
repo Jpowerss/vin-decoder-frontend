@@ -88,6 +88,7 @@
 
     <div class="button-container">
         <button class="decode-btn" onclick="decodeVINs()">Decode VINs</button>
+        <button class="decode-btn" onclick="copyAllVehicles()">Copy All</button>
         <button class="clear-btn" onclick="clearData()">Clear</button>
     </div>
 
@@ -196,7 +197,27 @@
             tempTextArea.select();
             document.execCommand("copy");
             document.body.removeChild(tempTextArea);
-            alert("Copied to clipboard: " + text);
+            // Removed the alert
+        }
+
+        // New function to copy all rows at once
+        function copyAllVehicles() {
+            const rows = document.querySelectorAll('#results-body tr');
+            let allData = [];
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                // Skip the first cell (which is the copy button)
+                let rowData = [];
+                for (let i = 1; i < cells.length; i++) {
+                    rowData.push(cells[i].innerText.trim());
+                }
+                allData.push(rowData.join(','));
+            });
+
+            if (allData.length > 0) {
+                copyToClipboard(allData.join('\n'));
+            }
         }
 
         function clearData() {
