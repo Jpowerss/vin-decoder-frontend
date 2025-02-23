@@ -19,18 +19,30 @@
             border-radius: 5px;
             border: 1px solid #ddd;
         }
-        button {
+        .button-container {
             margin-top: 10px;
+        }
+        button {
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
-            background-color: #007bff;
-            color: white;
             border: none;
             border-radius: 5px;
+            margin: 5px;
         }
-        button:hover {
+        .decode-btn {
+            background-color: #007bff;
+            color: white;
+        }
+        .decode-btn:hover {
             background-color: #0056b3;
+        }
+        .clear-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+        .clear-btn:hover {
+            background-color: #c82333;
         }
         table {
             width: 80%;
@@ -47,6 +59,17 @@
             background-color: #007bff;
             color: white;
         }
+        .copy-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .copy-btn:hover {
+            background-color: #218838;
+        }
         .loading {
             font-size: 18px;
             font-weight: bold;
@@ -62,7 +85,11 @@
     <h1>🚗 VIN Decoder</h1>
     <p>Enter VINs (one per line or separated by commas):</p>
     <textarea id="vins" placeholder="Paste VINs here, one per line or separated by commas"></textarea><br>
-    <button onclick="decodeVINs()">Decode VINs</button>
+
+    <div class="button-container">
+        <button class="decode-btn" onclick="decodeVINs()">Decode VINs</button>
+        <button class="clear-btn" onclick="clearData()">Clear</button>
+    </div>
 
     <h2>Results:</h2>
     <p id="loading" class="loading" style="display:none;">⏳ Decoding VINs, please wait...</p>
@@ -70,6 +97,7 @@
     <table id="results-table" style="display:none;">
         <thead>
             <tr>
+                <th>Copy</th>
                 <th>VIN</th>
                 <th>Year</th>
                 <th>Make</th>
@@ -125,8 +153,21 @@
                 tableBody.innerHTML = ""; // Clear previous results
 
                 data.forEach(vehicle => {
+                    const csvData = [
+                        vehicle.VIN || "N/A",
+                        vehicle.Year || "N/A",
+                        vehicle.Make || "N/A",
+                        vehicle.Model || "N/A",
+                        vehicle["Fuel Type Primary"] || "N/A",
+                        vehicle["Fuel Type Secondary"] || "N/A",
+                        vehicle.Turbo || "N/A",
+                        vehicle["Displacement(L)"] || "N/A",
+                        vehicle["Engine Brake (HP)"] || "N/A"
+                    ].join(",");
+
                     const row = document.createElement("tr");
                     row.innerHTML = `
+                        <td><button class="copy-btn" onclick="copyToClipboard('${csvData}')">📋 Copy</button></td>
                         <td>${vehicle.VIN || "N/A"}</td>
                         <td>${vehicle.Year || "N/A"}</td>
                         <td>${vehicle.Make || "N/A"}</td>
@@ -146,6 +187,24 @@
                 document.getElementById("loading").style.display = "none";
                 document.getElementById("error-message").textContent = "❌ API Error: " + error.message;
             });
+        }
+
+        function copyToClipboard(text) {
+            const tempTextArea = document.createElement("textarea");
+            tempTextArea.value = text;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempTextArea);
+            alert("Copied to clipboard: " + text);
+        }
+
+        function clearData() {
+            document.getElementById("vins").value = ""; // Clear input field
+            document.getElementById("results-body").innerHTML = ""; // Clear results table
+            document.getElementById("results-table").style.display = "none"; // Hide table
+            document.getElementById("error-message").textContent = ""; // Clear error messages
+            document.getElementById("loading").style.display = "none"; // Hide loading text
         }
     </script>
 </body>
