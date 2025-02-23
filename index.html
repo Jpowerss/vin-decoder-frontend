@@ -60,8 +60,8 @@
 </head>
 <body>
     <h1>🚗 VIN Decoder</h1>
-    <p>Enter VINs separated by commas:</p>
-    <textarea id="vins" placeholder="Example: SCBBR6ZG9RC017573, SCFVUJAWXMTV03849"></textarea><br>
+    <p>Enter VINs (one per line or separated by commas):</p>
+    <textarea id="vins" placeholder="Paste VINs here, one per line or separated by commas"></textarea><br>
     <button onclick="decodeVINs()">Decode VINs</button>
 
     <h2>Results:</h2>
@@ -89,8 +89,13 @@
 
         function decodeVINs() {
             const vinsInput = document.getElementById("vins").value.trim();
-            const vinsArray = vinsInput.split(",").map(vin => vin.trim()).filter(vin => vin.length > 0);
             
+            // Support both line-separated & comma-separated VINs
+            const vinsArray = vinsInput
+                .split(/\n|,/)  // Split by newline OR comma
+                .map(vin => vin.trim())  // Remove extra spaces
+                .filter(vin => vin.length > 0);  // Remove empty entries
+
             if (vinsArray.length === 0) {
                 document.getElementById("error-message").textContent = "⚠️ Please enter at least one VIN.";
                 return;
