@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VIN Decoder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 50px;
+        }
+        textarea {
+            width: 80%;
+            height: 100px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        pre {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            width: 80%;
+            margin: 20px auto;
+            text-align: left;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚗 VIN Decoder</h1>
+    <p>Enter VINs separated by commas:</p>
+    <textarea id="vins" placeholder="Example: SCBBR6ZG9RC017573, SCFVUJAWXMTV03849"></textarea><br>
+    <button onclick="decodeVINs()">Decode VINs</button>
+
+    <h2>Results:</h2>
+    <pre id="results">Awaiting VINs...</pre>
+
+    <script>
+        const API_URL = "https://vin-decoder-api-587629513083.us-central1.run.app/decode"; // Your API URL
+
+        function decodeVINs() {
+            const vinsInput = document.getElementById("vins").value;
+            const vinsArray = vinsInput.split(",").map(vin => vin.trim());
+
+            fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ vins: vinsArray })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("results").textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById("results").textContent = "Error: " + error;
+            });
+        }
+    </script>
+</body>
+</html>
+
