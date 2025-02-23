@@ -74,10 +74,11 @@
                 <th>Year</th>
                 <th>Make</th>
                 <th>Model</th>
-                <th>Fuel Type</th>
-                <th>Displacement</th>
-                <th>Engine HP</th>
+                <th>Fuel Type Primary</th>
+                <th>Fuel Type Secondary</th>
                 <th>Turbo</th>
+                <th>Engine Displacement (L)</th>
+                <th>Engine HP</th>
             </tr>
         </thead>
         <tbody id="results-body"></tbody>
@@ -126,9 +127,10 @@
                         <td>${vehicle.Make || "N/A"}</td>
                         <td>${vehicle.Model || "N/A"}</td>
                         <td>${vehicle["Fuel Type Primary"] || "N/A"}</td>
+                        <td>${vehicle["Fuel Type Secondary"] || "N/A"}</td>
+                        <td>${vehicle.Turbo || "N/A"}</td>
                         <td>${vehicle["Displacement(L)"] || "N/A"}</td>
                         <td>${vehicle["Engine Brake (HP)"] || "N/A"}</td>
-                        <td>${vehicle.Turbo || "N/A"}</td>
                     `;
                     tableBody.appendChild(row);
                 });
